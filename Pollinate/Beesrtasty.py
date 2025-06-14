@@ -38,12 +38,11 @@ def update():
         bee.y = bee.y - 2
     elif keyboard.down:
         bee.y = bee.y + 2
-    
     flower_collected = bee.colliderect(flower)
+
     if flower_collected:
         score += 10
         place_flower()
    
-
-clock.schedule(time_up, 10.0)
+clock.schedule(time_up, 10)
 pgzrun.go()
