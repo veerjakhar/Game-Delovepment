@@ -5,14 +5,15 @@ current_level = 1
 game_over = False
 game_complete = False
 START_SPEED = 10
+FINAL_LEVEL = 6
 
 WIDTH = 600
 HEIGHT = 800
-Centerx = WIDTH / 2
-Centery = HEIGHT / 2
-Center = (Centerx, Centery)
+CENTER_X = WIDTH / 2
+CENTER_Y = HEIGHT / 2
+CENTER = (CENTER_X, CENTER_Y)
 
-ITEMS = ["battery", "bottle", "plasic", "chips"]
+ITEMS = ["battery", "bottle", "plastic", "chips"]
 animations = []
 items = []
 
@@ -23,7 +24,7 @@ def draw():
     if game_over:
         display_message("Game Over", "Try Again")
     elif game_complete:
-        display_message("You won")
+        display_message("You won", "Well Done")
     else:
         for item in items:
             item.draw()
@@ -70,10 +71,37 @@ def animate_items(items_to_animate):
         animation = animate(item, duration = duration, on_finished = handle_game_over, y = HEIGHT)
         animations.append(animation)
 
+def on_mouse_down(pos):
+    global items, current_level
+    for item in items:
+        if item.collidepoint(pos):
+            if "paper" in item.image:
+                handle_game_complete()
+            else:
+                handle_game_over()
+
+def  handle_game_complete():
+    global current_level, items, animations, game_complete
+    stop_animation(animations)
+    if current_level == FINAL_LEVEL:
+        game_complete = True
+    else:
+        current_level += 1
+        items = []
+        animations = []
+
+def stop_animation(animations_to_stop):
+    for animations in animations_to_stop:
+        if animations.running:
+            animations.stop()
+
 def handle_game_over():
     global game_over
     game_over = True
 
+def display_message(heading_text, sub_heading_text):
+    screen.draw.text(heading_text, fontsize = 60, center = CENTER, color = "black")
+    screen.draw.text(sub_heading_text, fontsize = 30, center =(CENTER_X, CENTER_Y + 30), color = "black") 
 
 
 
