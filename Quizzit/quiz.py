@@ -7,7 +7,7 @@ marquee_message = ""
 question_index = 0
 question_count = 0
 time_left = 10
-question_file_name = "que.txt"
+question_file_name = "Quizzit/que.txt"
 is_game_over = False
 score = 0
 
@@ -53,7 +53,7 @@ def draw():
     screen.draw.textbox(marquee_message, marquee_box, color = "white")
     screen.draw.textbox(str(time_left), timer_box, color = "white", shadow = (0.5, 0.5), scolor = "dim grey")
     screen.draw.textbox("Skip", skip_box, color = "black", angle = -90)
-    screen.draw.textbox(questions[0].strip(), question_box, color = "white", shadow = (0.5, 0.5), scolor = "dim gray")
+    screen.draw.textbox(question[0].strip(), question_box, color = "white", shadow = (0.5, 0.5), scolor = "dim gray")
 
     index = 1 
     for answer_box in answer_boxes:
@@ -80,7 +80,7 @@ def on_mouse_down(pos):
     index = 1
     for box in answer_boxes:
         if box.collidepoint(pos):
-            if index is int(question[5]):
+            if index == int(question[5]):
                 corrrect_answer()
             else:
                 game_over()
@@ -112,8 +112,15 @@ def skip_question():
     else:
         game_over()
 
+def update_time_left():
+    global time_left
+    if time_left > 0:
+        time_left = time_left - 1
+    else:
+        game_over()
+
 read_question_file()
 question = read_next_question()
-#clock.schedule_interval(update_time_left, 1)
+clock.schedule_interval(update_time_left, 1)
 
 pgzrun.go()
