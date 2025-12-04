@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 import time
 import random
 
@@ -34,7 +35,7 @@ class Bin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load('bin.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (40, 50))
+        self.image = pygame.transform.scale(self.image, (40, 60))
         self.rect = self.image.get_rect()
 
 class Recycled(pygame.sprite.Sprite):
@@ -73,8 +74,6 @@ for i in range (20):
     all_sprites.add(plastic) 
     plastic_list.add(plastic)
 
-    
-
 bin = Bin()
 all_sprites.add(bin)
 
@@ -94,8 +93,7 @@ while playing:
         else:
             text = my_font.render(" Better Luck Next Time ", True, white)
             change_background("losescreen.jpg")
-        Screen.blit(text, 250, 40)
-        change_background('bg.png')
+        Screen.blit(text, (250, 40))
     else:
         change_background("bg.png")
         countdown = timing_font.render("Time left: " + str(60 - int(time_left)), True, white)
@@ -108,7 +106,7 @@ while playing:
                 bin.rect.y -= 5
 
         if keys[pygame.K_DOWN]:
-            if bin.rect.y < 360:
+            if bin.rect.y < 630:
                 bin.rect.y += 5
 
         if keys[pygame.K_LEFT]:
@@ -118,6 +116,19 @@ while playing:
         if keys[pygame.K_RIGHT]:
             if bin.rect.x < 850:
                 bin.rect.x += 5
+
+        # See if Item and Bin have Collided
+        item_hit_list = pygame.sprite.spritecollide(bin, item_list, True)
+        plastic_hit_list = pygame.sprite.spritecollide(bin, plastic_list, True)
+
+        # Check the List of Collitions
+        for item in item_hit_list:
+            score = score + 1
+            text = my_font.render("Score = " + str(score), True, white)
+        for plastic in plastic_hit_list:
+            score = score - 1
+            text = my_font.render("Score = " + str(score), True, white)
+
 
         # Print the Score on Screen
         Screen.blit(text, (20, 50))
